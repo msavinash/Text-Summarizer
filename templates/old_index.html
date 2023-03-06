@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+	<title>PaperPi</title>
+
+	<style>
+
+		textarea {
+			border:0;
+			outline:0;
+			background-color: #f7f7f9;
+		}
+
+		textarea:focus {
+			outline:none!important;
+		}
+
+		#text-container {
+			background-color: #f7f7f9;
+		}
+
+		hr {
+			margin: 1pt;
+		}
+
+		.text-container-input {
+			height: 200px;
+			overflow-y:auto;
+		}
+
+
+	</style>
+
+
+</head>
+<body>
+	<nav class="navbar navbar-light bg-light">
+	  <div class="container-fluid">
+	    <a class="navbar-brand" href="#">
+	    	<h3>PaperPi</h3>
+	    </a>
+	  </div>
+	</nav>
+
+	<form class="form_2" method="POST" action="summarize">
+	<div class="container m-5">
+		<div class="container border border-white rounded m-2" id="text-container">
+		<div class="row" align="center">
+		    <div class="col border-end" id="text-container-input">
+		    <div class="container p-1">
+		      <div class="row ps-3" id="text-container-input-heading">
+		      	<h5>Input</h5>
+		      </div>
+		      <hr>
+		      <div class="row text-container-input" id="text-container-input-heading">
+		      	<!-- <input type="text" name="input-text" id="input-text"> -->
+		      	<textarea id="textInput" name="textInput" rows="3"></textarea>
+		      </div>
+		    </div>
+		    </div>
+
+
+		    <div class="col border-start" id="text-container-output">
+	    	<div class="container p-1">
+		      <div class="row ps-3" id="text-container-output-heading">
+		      	<h5>Output</h5>
+		      </div>
+		      <hr>
+		      <div class="row text-container-input" id="text-container-output-heading">
+		      	<!-- <input type="text" name="output-text" id="output-text"> -->
+		      	<textarea id="textOutput" name="textOutput" rows="3"></textarea>
+
+		      </div>
+		    </div>
+		  	</div>
+		</div>
+		</div>
+
+		<div class="row m-3" style="width: 50%">
+			<div class="col-8">
+				<label for="summaryDegree" class="form-label">Summary degree</label>
+				<div class="row">
+					<div class="col-10">
+						<input type="range" class="form-range" min="0" max="100" id="summaryDegree" name="summaryDegree" value="30">
+					</div>
+					<div class="col-2">
+						<input type="text" id="displaySummaryDegree" value="30" style="width: 100%">
+					</div>
+				</div>
+			</div>
+			<div align="center" class="col-3 py-4">
+				<button type="button" class="btn btn-primary" id="summaryButton">Summarize</button>
+			</div>
+			<div class="col-1 py-4">
+				<div class="spinner-border" role="status" id="summaryLoader">
+				 	<span class="visually-hidden">Loading...</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+
+</body>
+
+<script type="text/javascript">
+
+	$("#summaryLoader").hide();
+
+	$('#summaryButton').on('click', function(event) {
+	  event.preventDefault();
+	  $("#summaryLoader").show();
+	  var inputData = $("#textInput").val();
+	  var degree = $("#summaryDegree").val();
+	  $.post( "summarize", { textInput: inputData, summaryDegree: degree})
+	  // $.post( "summarize", { textInput: inputData, summaryDegree: "2"})
+		  .done(function( data ) {
+		  	$("#summaryLoader").hide();
+		    // alert( "Data Loaded: " + data );
+		    $("#textOutput").val(data);
+		  });
+	});
+
+
+	$('#summaryDegree').on("change", function(event) {
+		event.preventDefault();
+		var degree = $("#summaryDegree").val();
+		$("#displaySummaryDegree").val(degree);
+	})
+
+
+
+</script>
+
+
+
+</html>
